@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1639809151505494539}
   - component: {fileID: 6810189255198121490}
   - component: {fileID: 3004113860579198388}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,7 +78,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.1
+    widthMultiplier: 0.25
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -153,7 +153,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8659763538873213243}
   - component: {fileID: 1989439140900508522}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ EdgeCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.1
   m_Points:
   - {x: -0.5, y: 0}
   - {x: 0.5, y: 0}

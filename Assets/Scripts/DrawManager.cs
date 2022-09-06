@@ -34,7 +34,7 @@ public class DrawManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            CurrentLine = Instantiate(_linePrefab, mousePosition, Quaternion.identity);
+            CurrentLine = Instantiate(_linePrefab, mousePosition, Quaternion.identity, transform);
             CurrentLine.SetColor(SelectedColor);
         }
 
@@ -43,4 +43,10 @@ public class DrawManager : MonoBehaviour
             CurrentLine.SetPosition(mousePosition);
     }
 
+    public void Clear()
+    {
+        foreach (Transform line in transform)
+            Destroy(line.gameObject);
+    }
+    
 }

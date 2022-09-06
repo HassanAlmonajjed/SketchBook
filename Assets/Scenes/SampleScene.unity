@@ -583,7 +583,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 390415712}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2144015723}
+        m_TargetAssemblyTypeName: DrawManager, Assembly-CSharp
+        m_MethodName: Clear
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &390415712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3313,7 +3325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23c274663c2ca2c47991e3e8a6daba2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _color: {r: 0, g: 0, b: 0, a: 0}
+  _color: {r: 0, g: 0, b: 0, a: 1}
   _selecteIndicator: {fileID: 1034147112}
 --- !u!1 &2063441762
 GameObject:

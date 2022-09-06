@@ -9,6 +9,17 @@ public class ColorSelector : MonoBehaviour
     public void OnColorSelected()
     {
         DrawManager.Instance.SelectedColor = _color;
+
+        ResetIndicators();
         _selecteIndicator.SetActive(true);
+    }
+
+    private void ResetIndicators()
+    {
+        var indicators = FindObjectsOfType<ColorSelector>();
+        foreach (var indicator in indicators)
+        {
+            indicator._selecteIndicator.SetActive(false);
+        }
     }
 }

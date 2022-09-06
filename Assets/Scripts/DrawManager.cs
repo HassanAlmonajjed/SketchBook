@@ -2,11 +2,26 @@ using UnityEngine;
 
 public class DrawManager : MonoBehaviour
 {
+    public static DrawManager Instance;
+
     public static float Resolution = 0.1f;
     [SerializeField] private Line _linePrefab;
 
     private Camera _camera;
-    private Line _currentLine;
+    public Line CurrentLine { get; set; }
+    public Color SelectedColor { get; set; } = Color.black;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
@@ -18,9 +33,14 @@ public class DrawManager : MonoBehaviour
         Vector2 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
 
         if (Input.GetMouseButtonDown(0))
-            _currentLine = Instantiate(_linePrefab, mousePosition, Quaternion.identity);
+        {
+            CurrentLine = Instantiate(_linePrefab, mousePosition, Quaternion.identity);
+            CurrentLine.SetColor(SelectedColor);
+        }
+
 
         if (Input.GetMouseButton(0))
-            _currentLine.SetPosition(mousePosition);
+            CurrentLine.SetPosition(mousePosition);
     }
+
 }

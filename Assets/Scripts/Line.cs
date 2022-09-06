@@ -5,6 +5,7 @@ public class Line : MonoBehaviour
 {
     private LineRenderer _lineRenderer;
     private EdgeCollider2D _collider;
+    int colorHash = Shader.PropertyToID("_Color");
 
     private readonly List<Vector2> _points = new();
 
@@ -18,6 +19,7 @@ public class Line : MonoBehaviour
     {
         _collider.transform.position -= transform.position;
     }
+
 
     public void SetPosition(Vector2 position)
     {
@@ -38,5 +40,11 @@ public class Line : MonoBehaviour
             return true;
 
         return Vector2.Distance(_lineRenderer.GetPosition(_lineRenderer.positionCount - 1), position) > DrawManager.Resolution;
+    }
+
+    public void SetColor(Color color)
+    {
+        _lineRenderer.startColor = color;
+        _lineRenderer.endColor = color;
     }
 }

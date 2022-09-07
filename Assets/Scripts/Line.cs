@@ -5,9 +5,9 @@ public class Line : MonoBehaviour
 {
     private LineRenderer _lineRenderer;
     private EdgeCollider2D _collider;
-    int colorHash = Shader.PropertyToID("_Color");
 
     private readonly List<Vector2> _points = new();
+    public int PointCount => _lineRenderer.positionCount;
 
     private void Awake()
     {
@@ -20,10 +20,9 @@ public class Line : MonoBehaviour
         _collider.transform.position -= transform.position;
     }
 
-
-    public void SetPosition(Vector2 position)
+    public void SetPosition(Vector2 position, bool ForceAppend = false)
     {
-        if (!CanAppend(position))
+        if (!CanAppend(position) && !ForceAppend)
             return;
 
         _points.Add(position);

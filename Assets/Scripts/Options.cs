@@ -11,4 +11,24 @@ public class Options : MonoBehaviour
     {
         DrawManager.Instance.DrawState = DrawState.Erase;
     }
+
+    public void OnUndoClicked()
+    {
+        if (DrawManager.Instance.UndoHistory.Count == 0)
+            return;
+
+        GameObject lastLine = DrawManager.Instance.UndoHistory.Pop();
+        lastLine.SetActive(!lastLine.activeInHierarchy);
+        DrawManager.Instance.RedoHistory.Push(lastLine);
+    }
+
+    public void OnRedoClicked()
+    {
+        if (DrawManager.Instance.RedoHistory.Count == 0)
+            return;
+
+        GameObject lastLine = DrawManager.Instance.RedoHistory.Pop();
+        lastLine.SetActive(!lastLine.activeInHierarchy);
+        DrawManager.Instance.UndoHistory.Push(lastLine);
+    }
 }

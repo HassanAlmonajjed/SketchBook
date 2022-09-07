@@ -1,18 +1,22 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class DrawManager : MonoBehaviour
 {
     public static DrawManager Instance;
+    public static float Resolution = 0.2f;
 
-    public static float Resolution = 0.1f;
     [SerializeField] private Line _linePrefab;
     [SerializeField] private LayerMask _lineMask;
 
-    private Camera _camera;
     public Line CurrentLine { get; set; }
     public Color SelectedColor { get; set; } = Color.black;
     public DrawState DrawState { get; set; } = DrawState.Draw;
+    public Stack<GameObject> UndoHistory { get; set; }
+    public Stack<GameObject> RedoHistory { get; set; }
+
+    private Camera _camera;
     private int bitMask;
 
     private void Awake()
@@ -31,6 +35,8 @@ public class DrawManager : MonoBehaviour
     {
         _camera = Camera.main;
         bitMask = LayerMask.GetMask("Line");
+        UndoHistory = new Stack<GameObject>();
+        RedoHistory = new Stack<GameObject>();
     }
 
     private void Update()
@@ -66,10 +72,20 @@ public class DrawManager : MonoBehaviour
         {
             CurrentLine = Instantiate(_linePrefab, mousePosition, Quaternion.identity, transform);
             CurrentLine.SetColor(SelectedColor);
+
+            AddToHistory(CurrentLine.gameObject);
         }
 
         if (Input.GetMouseButton(0))
             CurrentLine.SetPosition(mousePosition);
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            if (CurrentLine.PointCount <= 1)
+            {
+                CurrentLine.SetPosition(mousePosition + new Vector2(0.01f,0), true);
+            }
+        }
     }
 
     private void HandleErase(Vector2 mousePosition)
@@ -79,8 +95,22 @@ public class DrawManager : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero, Mathf.Infinity, bitMask);
 
             if (hit.collider != null)
-                Destroy(hit.collider.transform.parent.gameObject);
+            {
+                GameObject line = hit.collider.transform.parent.gameObject;
+                line.SetActive(false);
+
+                AddToHistory(line);
+            }
         }
+    }
+
+    private void AddToHistory(GameObject currentLine)
+    {
+        UndoHistory.Push(currentLine);
+
+        foreach (var line in RedoHistory)
+            Destroy(line);
+        RedoHistory.Clear();
     }
 }
 

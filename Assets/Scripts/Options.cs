@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 
 public class Options : MonoBehaviour
@@ -30,5 +31,11 @@ public class Options : MonoBehaviour
         GameObject lastLine = DrawManager.Instance.RedoHistory.Pop();
         lastLine.SetActive(!lastLine.activeInHierarchy);
         DrawManager.Instance.UndoHistory.Push(lastLine);
+    }
+
+    public void OnCloseClicked()
+    {
+        DrawManager.Instance.SaveBoard();
+        Application.Quit();
     }
 }

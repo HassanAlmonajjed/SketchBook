@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -13,11 +15,26 @@ public class DrawManager : MonoBehaviour
     public Line CurrentLine { get; set; }
     public Color SelectedColor { get; set; } = Color.black;
     public DrawState DrawState { get; set; } = DrawState.Draw;
+    public int ActiveLineCount
+    {
+        get 
+        {
+            int count = 0;
+            foreach (Transform line in transform)
+            {
+                if (line.gameObject.activeSelf)
+                    count++;
+            }
+
+            return count;
+        }
+    }
     public Stack<GameObject> UndoHistory { get; set; }
     public Stack<GameObject> RedoHistory { get; set; }
 
     private Camera _camera;
     private int bitMask;
+    private string _dataPath;
 
     private void Awake()
     {
@@ -37,6 +54,10 @@ public class DrawManager : MonoBehaviour
         bitMask = LayerMask.GetMask("Line");
         UndoHistory = new Stack<GameObject>();
         RedoHistory = new Stack<GameObject>();
+
+        _dataPath = Application.dataPath + "/save.txt";
+
+        LoadBoard();
     }
 
     private void Update()
@@ -111,6 +132,40 @@ public class DrawManager : MonoBehaviour
         foreach (var line in RedoHistory)
             Destroy(line);
         RedoHistory.Clear();
+    }
+
+    public void SaveBoard()
+    {
+        BoardData boardData = new();
+
+        foreach (Transform line in transform)
+        {
+            if (line.gameObject.activeSelf)
+            {
+                Line lineObject = line.GetComponent<Line>();
+                boardData.Data.Add(lineObject.ExtractData());
+            }
+        }
+
+        string json = JsonUtility.ToJson(boardData);
+        File.WriteAllText(_dataPath, json);
+    }
+
+    private void LoadBoard()
+    {
+        BoardData boardData = JsonUtility.FromJson<BoardData>(File.ReadAllText(_dataPath));
+
+        foreach (var data in boardData.Data)
+        {
+            var line = Instantiate(_linePrefab, data.Position, Quaternion.identity, transform);
+
+            Vector2[] points = new Vector2[data.Points.Length];
+            for (int i = 0; i < points.Length; i++)
+                points[i] = data.Points[i];
+            line.SetPositions(points);
+
+            line.SetColor(data.Color);
+        }
     }
 }
 

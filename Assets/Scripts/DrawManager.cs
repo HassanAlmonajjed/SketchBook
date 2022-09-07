@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -62,6 +61,9 @@ public class DrawManager : MonoBehaviour
 
     private void Update()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
         Vector2 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
 
         switch (DrawState)
@@ -86,9 +88,6 @@ public class DrawManager : MonoBehaviour
 
     private void HandleDraw(Vector2 mousePosition)
     {
-        if (EventSystem.current.IsPointerOverGameObject())
-            return;
-
         if (Input.GetMouseButtonDown(0))
         {
             CurrentLine = Instantiate(_linePrefab, mousePosition, Quaternion.identity, transform);
@@ -97,15 +96,15 @@ public class DrawManager : MonoBehaviour
             AddToHistory(CurrentLine.gameObject);
         }
 
-        if (Input.GetMouseButton(0))
+        else if (Input.GetMouseButton(0))
+        {
             CurrentLine.SetPosition(mousePosition);
+        }
 
-        if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0))
         {
             if (CurrentLine.PointCount <= 1)
-            {
                 CurrentLine.SetPosition(mousePosition + new Vector2(0.01f,0), true);
-            }
         }
     }
 
